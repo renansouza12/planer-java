@@ -12,6 +12,10 @@ import org.springframework.web.bind.annotation.*;
 
 import com.rocketseat.planner.participant.ParticipantService;
 import com.rocketseat.planner.participant.ParticipantRequestDTO;
+import com.rocketseat.planner.activities.ActivityDataDTO;
+import com.rocketseat.planner.activities.ActivityRequestDTO;
+import com.rocketseat.planner.activities.ActivityResponse;
+import com.rocketseat.planner.activities.ActivityService;
 import com.rocketseat.planner.participant.Participant;
 import com.rocketseat.planner.participant.ParticipantCreateResponse;
 import com.rocketseat.planner.participant.ParticipantDataDTO;
@@ -25,6 +29,8 @@ public class TripController {
     @Autowired
     private TripRepository repository;
 
+    @Autowired
+    private ActivityService activityService;
 
     @PostMapping
     public ResponseEntity<TripCreateResponse> createTrip(@RequestBody TripRequestDTO payload){
@@ -102,4 +108,27 @@ public class TripController {
 
         return ResponseEntity.ok(participantList);
     }
+
+    @PostMapping("/{id}/activities")
+    public ResponseEntity<ActivityResponse> registerActivity(@PathVariable UUID id,@RequestBody ActivityRequestDTO payload){
+        Optional<Trip> trip = this.repository.findById(id);
+
+        if(trip.isPresent()){
+            Trip rawTrip = trip.get() ;
+
+            ActivityResponse activityResponse = this.activityService.registerActivity(payload, rawTrip);
+
+            return ResponseEntity.ok(activityResponse);
+        }
+
+        return ResponseEntity.notFound().build();
+    }
+
+    @GetMapping("/{id}/activities")
+    public ResponseEntity<List<ActivityDataDTO>> getAllActivities(@PathVariable UUID id){
+        List<ActivityDataDTO> activityDataList = this.activityService.getAllActivitiesFromId(id);
+
+        return ResponseEntity.ok(activityDataList);
+    }
+
 }
