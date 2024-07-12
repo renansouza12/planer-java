@@ -100,4 +100,5 @@ This is a Java Spring Boot application for managing trip planning activities. Th
 - **Get All Links**
   - `GET /trips/{id}/links`
   - Response: `200 OK`
-
+ 
+  ![App Screenshot](https://i.ibb.co/DLR8Mw6/Captura-de-tela-2024-07-12-174139.png)
